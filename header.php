@@ -54,6 +54,7 @@
 
     button {
         padding: 10px;
+        cursor: pointer;
     }
 </style>
 
