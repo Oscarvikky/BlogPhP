@@ -3,8 +3,8 @@ require "functions.php";
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $email = addslashes($_POST['email']);
-    $username = addslashes($_POST['password']);
-    $date = date('Y-m-d H:i:s');
+    $password = addslashes($_POST['password']);
+
 
     $query = "SELECT * FROM `users_tb` WHERE email = '$email' && password = '$password'";
     $result = mysqli_query($con, $query);

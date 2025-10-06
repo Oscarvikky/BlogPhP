@@ -4,7 +4,7 @@ require "functions.php";
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $username = addslashes($_POST['username']);
     $email = addslashes($_POST['email']);
-    $username = addslashes($_POST['password']);
+    $password = addslashes($_POST['password']);
     $date = date('Y-m-d H:i:s');
 
     $query = "INSERT INTO `users_tb` (`username`,`email`,`password`,`date`) VALUES ('$username', '$email', '$password', '$date')";
@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <h2 style="text-align: center">Signup</h2>
         <form action="" method="post" style="margin: auto; padding: 10px ">
             <input type="text" name="username" placeholder="Username">
-            <input type="text" name="email" placeholder="Email">
-            <input type="text" name="password" placeholder="Password">
+            <input type="email" name="email" placeholder="Email">
+            <input type="password" name="password" placeholder="Password">
 
             <button>Signup</button>
 
