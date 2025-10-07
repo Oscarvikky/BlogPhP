@@ -39,30 +39,37 @@ check_login();
 
                 ?>
                 <div style=" background-color:white; display: flex; max-width:500px;  margin:auto; border:solid thin #aaa; border-radius:10px; margin-bottom: 10px; margin-top:10px;">
-                    <div style="flex:2; text-align: center;">
+                    <div style="flex:2; text-align: center; margin:12px;">
                         <img src="<?= $user_row['image'] ?>" alt="" style=" border-radius: 50%; width:100px;  height:100px; object:fit">
                         <br>
                         <?= $user_row['username'] ?>
 
                     </div>
-                    <div style="flex:8; background:black; display:flex; flex-direction: column;">
+                    <div style="flex: 8; display: flex; flex-direction: column; gap: 10px;">
+
                         <?php if (file_exists($row['image'])): ?>
-                            <div">
-                                <img src="<?= $row['image'] ?>" alt="" style="width:100%; height:200px; object:fit">
+                            <div>
+                                <img src="<?= $row['image'] ?>" alt="" style="width: 100%; height: 250px; object-fit: cover; display:block">
+                            </div>
+                        <?php endif; ?>
+
+                        <div>
+                            <div>
+                                <?= $row['post'] ?>
+                            </div>
+                            <div style="color: #888; font-size:8px">
+                                <?= date("jS, M, Y", strtotime($row['date'])) ?>
+                            </div>
+                        </div>
+
                     </div>
-                <?php endif ?>
-                <div>
-                    <div style="color: #888;"><?= date("jS M, Y ", strtotime($row['date'])) ?> </div>
-                    <?php echo $row['post'] ?>
                 </div>
-                </div>
+
+            <?php endwhile ?>
+
+        <?php endif; ?>
     </div>
-
-<?php endwhile ?>
-
-<?php endif; ?>
-</div>
-<?php include "footer.php"; ?>
+    <?php include "footer.php"; ?>
 
 
 </body>

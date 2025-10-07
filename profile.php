@@ -22,28 +22,24 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['action']) && $_POST['
 } elseif ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['username'])) {
     // edit profile
     $image_added = false;
-    $folder = "uploads/";
-
-    // Ensure uploads folder exists
-    if (!file_exists($folder)) {
-        mkdir($folder, 0777, true);
-    }
-
-    // File upload handling
     if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] == 0 && $_FILES['image']['type'] == 'image/jpeg') {
-        // Generate unique file name to avoid overwriting
-        $newImageName = uniqid('user_') . "_" . basename($_FILES['image']['name']);
-        $image = $folder . $newImageName;
 
-        // Move file
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $image)) {
-            $image_added = true;
-
-            // Delete old image only if it exists
-            if (!empty($_SESSION['info']['image']) && file_exists($_SESSION['info']['image'])) {
-                unlink($_SESSION['info']['image']);
-            }
+        $folder = "uploads/";  // create folder for storing uploaded images
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
         }
+
+        $image = $folder . $_FILES['image']['name'];
+
+        (move_uploaded_file($_FILES['image']['tmp_name'], $image));
+
+
+        // Delete old image only if it exists
+        if (file_exists($_SESSION['info']['image'])) {
+            unlink($_SESSION['info']['image']);
+        }
+
+        $image_added = true;
     }
 
     // Prepare other values
@@ -90,29 +86,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['action']) && $_POST['
     // $image_added = false;   // this check to know if image added   
     $image = "";
     if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] == 0 && $_FILES['image']['type'] == 'image/jpeg') {
-        // Generate unique file name to avoid overwriting
-        $newImageName = uniqid('user_') . "_" . basename($_FILES['image']['name']);
-        $image = $folder . $newImageName;
-
-        // Move file
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $image)) {
-
-
-            // Delete old image only if it exists
-            if (!empty($_SESSION['info']['image']) && file_exists($_SESSION['info']['image'])) {
-                unlink($_SESSION['info']['image']);
-            }
+        $folder = "uploads/";  // create folder for storing uploaded images
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
         }
+        $image = $folder . $_FILES['image']['name'];
+        (move_uploaded_file($_FILES['image']['tmp_name'], $image));
     }
 
     $post = addslashes($_POST['post']);
     $user_id = $_SESSION['info']['id'];
     $date = date('Y-m-d H:i:s');
 
-
-
     $query = "INSERT INTO `post` (`user_id`, `post`, `image`,`date`) VALUES('$user_id', '$post', '$image', '$date')";
-
 
     $result = mysqli_query($con, $query);
     header("location: profile.php");
@@ -134,6 +120,26 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['action']) && $_POST['
     <div>
         <div>
             <?php if (isset($_GET['action']) && $_GET['action'] == 'edit'): ?>
+
+                <h5 style="margin-top: 30px;"> edit a post</h5> <br>
+                <form action="" enctype="multipart/form-data" method="post" style="margin: auto; padding: 10px ">
+                    image: <input type="file" name="image" id="">
+                    <textarea name="post" rows="8"></textarea> <br>
+                    <input type="hidden" name="action" action="post_edit">
+
+                    <button>Post</button>
+
+                </form>
+
+
+
+
+
+
+
+
+
+            <?php elseif (isset($_GET['action']) && $_GET['action'] == 'edit'): ?>
 
                 <h2 style="text-align: center">edit profile</h2>
                 <form action="" method="post" enctype="multipart/form-data" style="margin: auto; padding: 10px ">
@@ -222,32 +228,45 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['action']) && $_POST['
 
                     ?>
                     <div style="display: flex; border:solid thin #aaa; border-radius:20px; margin-bottom:12px; margin-top:12px;">
-                        <div style="flex:1; text-align:center;">
-                            <img src="<?= $row['image'] ?>" alt="" style=" border-radius: 50%; width:100px; margin:12px height:100px; object:fit">
+                        <div style="flex:1; text-align:center; margin:15px;">
+                            <img src="<?= $user_row['image'] ?>" alt="" style=" border-radius: 50%; width:100px;  height:100px; object:fit">
                             <br>
                             <?= $user_row['username'] ?>
 
                         </div>
-                        <div style="flex:8">
+                        <div style="flex: 8; display: flex; flex-direction: column; gap: 10px;">
+
                             <?php if (file_exists($row['image'])): ?>
-                                <div">
-                                    <img src="<?= $row['image'] ?>" alt="" style="width:100%; height:200px; object:fit">
+                                <div>
+                                    <img src="<?= $row['image'] ?>" alt="" style="width: 100%; height: 250px; object-fit: cover; display:block">
+                                </div>
+                            <?php endif; ?>
+
+                            <div>
+                                <div>
+                                    <?= $row['post'] ?>
+                                </div>
+                                <div style="color: #888; font-size:8px">
+                                    <?= date("jS, M, Y", strtotime($row['date'])) ?>
+                                </div>
+                                <br>
+
+                                <a href="profile.php?action=post_edit &id= <?= $row['id'] ?>"><button>Edit</button></a>
+                                <a href="profile.php?action=post_delete &id=  <?= $row['id'] ?> "><button>Delete</button></a>
+                            </div>
+                            <br>
+
                         </div>
-                    <?php endif ?>
-                    <div>
-                        <div style="color: #888;"><?php echo date("JS, M, Y ", strtotime($row['date'])) ?> </div>
-                        <?php echo $row['post'] ?>
+
                     </div>
-                    </div>
+
+                <?php endwhile ?>
+
+            <?php endif; ?>
         </div>
-
-    <?php endwhile ?>
-
-<?php endif; ?>
+    <?php endif ?>
     </div>
-<?php endif ?>
-</div>
-<?php include "footer.php" ?>
+    <?php include "footer.php" ?>
 </body>
 
 </html>
