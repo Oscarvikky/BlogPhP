@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['action']) && $_POST['
     }
 
     // File upload handling
-    if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] == 0) {
+    if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] == 0 && $_FILES['image']['type'] == 'image/jpeg') {
         // Generate unique file name to avoid overwriting
         $newImageName = uniqid('user_') . "_" . basename($_FILES['image']['name']);
         $image = $folder . $newImageName;
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['action']) && $_POST['
     // adding post
     // $image_added = false;   // this check to know if image added   
     $image = "";
-    if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] == 0) {
+    if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] == 0 && $_FILES['image']['type'] == 'image/jpeg') {
         // Generate unique file name to avoid overwriting
         $newImageName = uniqid('user_') . "_" . basename($_FILES['image']['name']);
         $image = $folder . $newImageName;
@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['action']) && $_POST['
                 <?php while ($row = mysqli_fetch_assoc($result)): ?>
                     <?php
                         $user_id = $row['user_id'];
-                        $query = "SELECT `username`, `image` FROM `user_tb` WHERE `id` = '$user_id' limit 1 ";
+                        $query = "SELECT `username`, `image` FROM `users_tb` WHERE `id` = '$user_id' limit 1 ";
                         $result2 = mysqli_query($con, $query);
                         $user_row = mysqli_fetch_assoc($result2)
 
