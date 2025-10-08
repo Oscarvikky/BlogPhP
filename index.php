@@ -18,8 +18,8 @@ check_login();
     <div style="  max-width:500px; margin:auto;">
         <h3 style="text-align:center;">Timeline</h3>
         <?php
-        $id = $_SESSION['info']['id'];
-        $query = "SELECT * FROM `post` WHERE `user_id` = '$id' ORDER BY `id` DESC";
+
+        $query = "SELECT * FROM `post` ORDER BY `id` DESC";
         $result = mysqli_query($con, $query)
 
 
@@ -55,7 +55,8 @@ check_login();
 
                         <div>
                             <div>
-                                <?= $row['post'] ?>
+                                <?= nl2br(htmlspecialchars($row['post'])) ?>
+
                             </div>
                             <div style="color: #888; font-size:8px">
                                 <?= date("jS, M, Y", strtotime($row['date'])) ?>
